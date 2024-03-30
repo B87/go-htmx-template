@@ -1,0 +1,15 @@
+BEGIN;
+
+CREATE TYPE role AS ENUM ('admin', 'user');
+
+CREATE TABLE IF NOT EXISTS public.users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL CONSTRAINT email_unique UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role role,
+    email_validated BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+COMMIT;

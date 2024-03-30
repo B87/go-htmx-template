@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Admin Panel - HTMX + Go Application</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+    <div
+        class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
+        {{ template "navbar.html" . }}
+        {{ template "admin_sidebar.html" . }}
+        <div class="h-full mt-14 mb-10 md:ml-64">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 pt-4 pl-4 pb-2 gap-4">
+                <button id="openModalBtn" class="btn btn-wide">New Post</button>
+                <!-- Modal Structure (Initially hidden) -->
+                <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full"
+                    style="display:none;">
+                    <div id="modalContent"
+                        class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-800">
+                        <form id="modalForm" action="/admin/blog/posts" method="post" class="space-y-4">
+                            <div>
+                                <input type="text" name="title" placeholder="Title" required
+                                    class="px-4 py-2 w-full border rounded-md bg-gray-700 text-white">
+                            </div>
+                            <div>
+                                <input type="text" name="description" placeholder="Description" required
+                                    class="px-4 py-2 w-full border rounded-md bg-gray-700 text-white">
+                            </div>
+                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">
+                                Create
+                            </button>
+                            <button type="button" id="closeModalBtn"
+                                class="px-4 py-2 ml-2 bg-red-500 text-white rounded hover:bg-red-700">
+                                Close
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="w-full overflow-hidden rounded-lg shadow-xs p-4">
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr
+                                class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                                <th class="px-4 py-3">Title</th>
+                                <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3">Date</th>
+                                <th class="px-4 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                            {{range .Posts}}
+                            <tr data-href="/admin/blog/posts/{{.Slug}}"
+                                class="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-400">
+
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center text-sm">
+                                        <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                            <img class="object-cover w-full h-full rounded-full" src="{{.ThumbnailURL}}"
+                                                alt="" loading="lazy" />
+                                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold">{{.Title}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-sm">{{.Status}}</td>
+                                <td class="px-4 py-3 text-sm">{{.CreatedAt}}</td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center space-x-4 text-sm">
+                                        <a href="/admin/blog/posts/{{.Slug}}"
+                                            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                                            aria-label="Edit">
+                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
+                                                viewBox="0 0 20 20">
+                                                <path
+                                                    d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
+                                                </path>
+                                                <path fill-rule="evenodd"
+                                                    d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                        </a>
+                                        <a href="/admin/blog/posts/{{.Slug}}"
+                                            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                                            aria-label="Edit">
+                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
+                                                viewBox="0 0 20 20">
+                                                <path
+                                                    d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
+                                                </path>
+                                                <path fill-rule="evenodd"
+                                                    d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+                    <span class="flex items-center col-span-3"> Showing 21-30 of 100 </span>
+                    <span class="col-span-2"></span>
+                    <!-- Pagination -->
+                    <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+                        <nav aria-label="Table navigation">
+                            <ul class="inline-flex items-center">
+                                <li>
+                                    <button
+                                        class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
+                                        aria-label="Previous">
+                                        <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                            <path
+                                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                                clip-rule="evenodd" fill-rule="evenodd"></path>
+                                        </svg>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">1</button>
+                                </li>
+                                <li>
+                                    <button
+                                        class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">2</button>
+                                </li>
+                                <li>
+                                    <button
+                                        class="px-3 py-1 text-white dark:text-gray-800 transition-colors duration-150 bg-blue-600 dark:bg-gray-100 border border-r-0 border-blue-600 dark:border-gray-100 rounded-md focus:outline-none focus:shadow-outline-purple">3</button>
+                                </li>
+                                <li>
+                                    <button
+                                        class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">4</button>
+                                </li>
+                                <li>
+                                    <span class="px-3 py-1">...</span>
+                                </li>
+                                <li>
+                                    <button
+                                        class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">8</button>
+                                </li>
+                                <li>
+                                    <button
+                                        class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">9</button>
+                                </li>
+                                <li>
+                                    <button
+                                        class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                                        aria-label="Next">
+                                        <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
+                                            <path
+                                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                                clip-rule="evenodd" fill-rule="evenodd"></path>
+                                        </svg>
+                                    </button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    document.getElementById("openModalBtn").addEventListener("click", function () {
+        document.getElementById("modal").style.display = "block";
+    });
+
+    document.getElementById("closeModalBtn").addEventListener("click", function () {
+        document.getElementById("modal").style.display = "none";
+    });
+
+</script>
+
+</html>

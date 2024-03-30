@@ -1,0 +1,17 @@
+version: 0
+force:
+  major: 0
+  minor: 0
+  patch: 1
+wording:
+  patch:
+    - fix
+    - update
+  minor:
+    - change
+    - improve
+  major:
+    - breaking
+  release:
+    - release-candidate
+    - add-rc

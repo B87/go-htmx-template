@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>HTMX + Go Application</title>
+    <meta property="og:title" content="Smart Puzzling Ram" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+</head>
+
+<body>
+    {{ template "navbar.html" . }}
+
+    <div class="pt-16 min-h-screen bg-base-200 mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-5xl font-bold text-center pt-6">Blog Home</h1>
+        <div id="posts" class="max-w-4xl mx-auto flex flex-col items-center">
+            {{range .Posts}}
+            <div class="divider my-8 w-full"></div>
+            <a href="/blog/{{.Slug}}"
+                class="w-full flex flex-col bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                <img class="w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                    src="{{.ThumbnailURL}}" alt="">
+                <div class="flex flex-col justify-between p-4 leading-normal">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{.Title}}</h5>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{.Description}}</p>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{.CreatedAt}}</p>
+                </div>
+            </a>
+            {{end}}
+        </div>
+    </div>
+
+
+
+</body>
+
+{{ template "footer.html" .}}
+
+</html>

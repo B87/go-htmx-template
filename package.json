@@ -1,0 +1,22 @@
+{
+  "name": "go-htmx-template",
+  "version": "1.0.0",
+  "description": "https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyListingsLatest",
+  "main": "index.js",
+  "scripts": {
+    "build": "postcss web/static/css/tailwind.css -o web/static/css/styles.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.19",
+    "daisyui": "^4.7.3",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "postcss-cli": "^11.0.0"
+  }
+}
